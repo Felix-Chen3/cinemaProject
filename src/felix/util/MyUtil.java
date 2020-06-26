@@ -5,6 +5,8 @@
  */
 package felix.util;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -79,7 +81,7 @@ public class MyUtil {
      * @return String[]
      * @throws
     */
-    public static ArrayList scanInfo(String field) {
+    public static String scanInfo(String field) {
         System.out.println(field+"数量:");
         int length = scanner.nextInt();
         if (length < 1) {
@@ -91,6 +93,7 @@ public class MyUtil {
             String tmp = scanner.next();
             list.add(tmp);
         }
-        return list;
+        String afterChange = StringUtils.join(list, "|");
+        return afterChange;
     }
 }

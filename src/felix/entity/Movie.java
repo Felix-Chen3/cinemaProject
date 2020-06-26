@@ -6,19 +6,34 @@
 package felix.entity;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Movie {
     private int id;
     private String name;
     private String type;
     private String director;
-    private ArrayList<String> protagonist;
+    private String protagonist;
     private String duration;
     private String detail;
     private double score;
-    private ArrayList<String> labels;
+    private String labels;
 
-    public Movie(String name, String type, String director, ArrayList<String> protagonist, String duration, String detail, double score) {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Movie movie = (Movie) o;
+        return Objects.equals(name, movie.name) &&
+                Objects.equals(director, movie.director);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, director);
+    }
+
+    public Movie(String name, String type, String director, String protagonist, String duration, String detail, double score, String labels) {
         this.name = name;
         this.type = type;
         this.director = director;
@@ -26,22 +41,17 @@ public class Movie {
         this.duration = duration;
         this.detail = detail;
         this.score = score;
+        this.labels = labels;
     }
 
-
-    @Override
-    public String toString() {
-        return "Movie{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", director='" + director + '\'' +
-                ", protagonist=" + protagonist +
-                ", duration='" + duration + '\'' +
-                ", detail='" + detail + '\'' +
-                ", score=" + score +
-                ", labels=" + labels +
-                '}';
+    public Movie(String name, String type, String director, String protagonist, String duration, String detail, double score) {
+        this.name = name;
+        this.type = type;
+        this.director = director;
+        this.protagonist = protagonist;
+        this.duration = duration;
+        this.detail = detail;
+        this.score = score;
     }
 
     public int getId() {
@@ -76,11 +86,11 @@ public class Movie {
         this.director = director;
     }
 
-    public ArrayList<String> getProtagonist() {
+    public String getProtagonist() {
         return protagonist;
     }
 
-    public void setProtagonist(ArrayList<String> protagonist) {
+    public void setProtagonist(String protagonist) {
         this.protagonist = protagonist;
     }
 
@@ -108,22 +118,27 @@ public class Movie {
         this.score = score;
     }
 
-    public ArrayList<String> getLabels() {
+    public String getLabels() {
         return labels;
     }
 
-    public void setLabels(ArrayList<String> labels) {
+    public void setLabels(String labels) {
         this.labels = labels;
     }
 
-    public Movie(String name, String type, String director, ArrayList<String> protagonist, String duration, String detail, double score, ArrayList<String> labels) {
-        this.name = name;
-        this.type = type;
-        this.director = director;
-        this.protagonist = protagonist;
-        this.duration = duration;
-        this.detail = detail;
-        this.score = score;
-        this.labels = labels;
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", director='" + director + '\'' +
+                ", protagonist=" + protagonist +
+                ", duration='" + duration + '\'' +
+                ", detail='" + detail + '\'' +
+                ", score=" + score +
+                ", labels=" + labels +
+                '}';
     }
+
 }

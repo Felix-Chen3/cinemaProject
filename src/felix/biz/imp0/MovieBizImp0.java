@@ -7,26 +7,26 @@ package felix.biz.imp0;
 
 
 import felix.biz.MovieBiz;
+import felix.dao.Imp0.MovieDaoImp0;
 import felix.entity.Movie;
 
 import java.util.ArrayList;
 
 public class MovieBizImp0 implements MovieBiz {
+    private MovieDaoImp0 mdi0 = new MovieDaoImp0();
+
     @Override
     public boolean create(Movie movie) {
-//        {
-//            ArrayList<Cinema> rs = cdi0.queryByNameAll(cinema);
-//            if (rs == null) {
-//                return cdi0.createCinema(cinema);
-//            }
-//
-//            if (rs.contains(cinema)) {
-//                return false;
-//            } else {
-//                return cdi0.createCinema(cinema);
-//            }
-//        }
-        return false;
+        ArrayList<Movie> rs = mdi0.queryByNameAll(movie);
+        if (rs == null) {
+            return mdi0.createMovie(movie);
+        }
+
+        if (rs.contains(movie)) {
+            return false;
+        } else {
+            return mdi0.createMovie(movie);
+        }
     }
 
     @Override

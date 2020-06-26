@@ -14,8 +14,8 @@ import java.util.ArrayList;
 public class MovieDaoImp0 extends BaseDao implements MovieDao {
     @Override
     public boolean createMovie(Movie movie) {
-            String sql = "insert into movie(name,address)values(?,?)";
-            int rs = update(sql, movie.getName(), movie.getDirector());
+            String sql = "insert into movie(name,type,director,protagonist,duration,detail,score,labels)values(?,?,?,?,?,?,?,?)";
+            int rs = update(sql, movie.getName(),movie.getType(), movie.getDirector(),movie.getProtagonist(),movie.getDuration(),movie.getDetail(),movie.getScore(),movie.getLabels());
             if (rs == 0) {
                 return false;
             } else {
@@ -30,12 +30,14 @@ public class MovieDaoImp0 extends BaseDao implements MovieDao {
 
     @Override
     public ArrayList<Movie> queryByNameAll(Movie movie) {
-        return null;
+        String sql = "select name,type,director,protagonist,duration,detail,score,labels from movie where name =?";
+        return queryAll(Movie.class, sql, movie.getName());
     }
 
     @Override
     public ArrayList<Movie> fuzzyQueryByNameAll(Movie movie) {
-        return null;
+        String sql = "id,select name,type,director,protagonist,duration,detail,score,labels from movie where name like ? ";
+        return queryAll(Movie.class,sql,"%"+movie.getName()+"%");
     }
 
     @Override

@@ -5,6 +5,7 @@
  */
 package felix.view;
 
+import com.google.gson.Gson;
 import felix.biz.imp0.AdminBizImp0;
 import felix.biz.imp0.CinemaBizImp0;
 import felix.biz.imp0.MovieBizImp0;
@@ -18,6 +19,7 @@ import java.util.Scanner;
 
 public class Menu {
     private Scanner scanner = new Scanner(System.in);
+    private Gson gson = new Gson();
     private String choice;
     private AdminBizImp0 abi0 = new AdminBizImp0();
     private CinemaBizImp0 cbi0 = new CinemaBizImp0();
@@ -219,8 +221,8 @@ public class Menu {
             if (!MyUtil.isGoOn("是否返回上级界面(y/n)", "y")) break;
         }
     }
-
-    private void createMovie() {
+    @Test
+    public void createMovie() {
         while (true) {
             System.out.println("电影名称:");
             String name = scanner.next();
@@ -228,23 +230,22 @@ public class Menu {
             String type = scanner.next();
             System.out.println("导演:");
             String director = scanner.next();
-            ArrayList protagonists = MyUtil.scanInfo("主演");
-            System.out.println("电影时常:");
+            String protagonists = MyUtil.scanInfo("主演");
+            System.out.println("电影时长:");
             String duration = scanner.next();
             System.out.println("电影详情:");
             String detail = scanner.next();
-            System.out.println("电影类型:");
+            System.out.println("电影评分:");
             double score = scanner.nextDouble();
             Movie movie = null;
             if (!MyUtil.isGoOn("是否额外添加标签(y/n)", "y")){
-                ArrayList labels = MyUtil.scanInfo("标签");
+                String labels = MyUtil.scanInfo("标签");
                 movie = new Movie(name, type, director, protagonists, duration, detail, score,labels);
             }else {
                 movie = new Movie(name, type, director, protagonists, duration, detail, score);
             }
             MyUtil.showIsOk(mbi0.create(movie), "添加成功", "添加失败");
             if (!MyUtil.isGoOn("是否返回上级界面(y/n)", "n")) break;
-            System.out.println("yuwenfengsb");
         }
     }
 
