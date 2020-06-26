@@ -20,10 +20,11 @@ public class MyUtil {
      * @return boolean
      * @throws null
     */
-    public static boolean isGoOn(String msg, String choice) {
+    public static boolean isGoOn(String msg, String outChoice) {
+        Scanner scanner1 = new Scanner(System.in);
         System.out.println(msg);
-        String c = scanner.next();
-        if (c.equals(choice)) {
+        String c = scanner1.next();
+        if (c.equals(outChoice)) {
             return false;
         }
         return true;
@@ -82,15 +83,16 @@ public class MyUtil {
      * @throws
     */
     public static String scanInfo(String field) {
+        Scanner scanner1 = new Scanner(System.in);
         System.out.println(field+"数量:");
-        int length = scanner.nextInt();
+        int length = scanner1.nextInt();
         if (length < 1) {
             return null;
         }
         ArrayList list = new ArrayList();
         for (int i = 0; i < length; i++) {
             System.out.println(field+(i+1)+":");
-            String tmp = scanner.next();
+            String tmp = scanner1.next();
             list.add(tmp);
         }
         String afterChange = StringUtils.join(list, "|");

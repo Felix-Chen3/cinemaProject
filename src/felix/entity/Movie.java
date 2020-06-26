@@ -106,6 +106,9 @@ public class Movie {
         return detail;
     }
 
+    public Movie() {
+    }
+
     public void setDetail(String detail) {
         this.detail = detail;
     }

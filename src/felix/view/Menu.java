@@ -15,6 +15,7 @@ import felix.util.MyUtil;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Menu {
@@ -224,19 +225,35 @@ public class Menu {
     @Test
     public void createMovie() {
         while (true) {
-            System.out.println("电影名称:");
-            String name = scanner.next();
-            System.out.println("电影类型:");
-            String type = scanner.next();
-            System.out.println("导演:");
-            String director = scanner.next();
-            String protagonists = MyUtil.scanInfo("主演");
-            System.out.println("电影时长:");
-            String duration = scanner.next();
-            System.out.println("电影详情:");
-            String detail = scanner.next();
-            System.out.println("电影评分:");
-            double score = scanner.nextDouble();
+            String name = null;
+            String type = null;
+            String director = null;
+            String protagonists = null;
+            String duration = null;
+            String detail = null;
+            double score = 0;
+            try {
+                System.out.println("电影名称:");
+                name = scanner.next();
+                System.out.println("电影类型:");
+                type = scanner.next();
+                System.out.println("导演:");
+                director = scanner.next();
+                protagonists = MyUtil.scanInfo("主演");
+                System.out.println("电影时长:");
+                duration = scanner.next();
+                System.out.println("电影详情:");
+                detail = scanner.next();
+                System.out.println("电影评分:");
+                score = scanner.nextDouble();
+            } catch (InputMismatchException e) {
+                System.out.println("！！！！！！！！！!输入格式错误！！！！！！！！！!");
+                if (MyUtil.isGoOn("是否重新添加电影(y/n)", "n")) {
+                    continue;
+                } else {
+                    break;
+                }
+            }
             Movie movie = null;
             if (!MyUtil.isGoOn("是否额外添加标签(y/n)", "y")){
                 String labels = MyUtil.scanInfo("标签");
@@ -245,7 +262,7 @@ public class Menu {
                 movie = new Movie(name, type, director, protagonists, duration, detail, score);
             }
             MyUtil.showIsOk(mbi0.create(movie), "添加成功", "添加失败");
-            if (!MyUtil.isGoOn("是否返回上级界面(y/n)", "n")) break;
+            if (!MyUtil.isGoOn("是否继续添加电影(y/n)", "n")) break;
         }
     }
 
