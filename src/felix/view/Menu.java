@@ -244,6 +244,7 @@ public class Menu {
             }
             MyUtil.showIsOk(mbi0.create(movie), "添加成功", "添加失败");
             if (!MyUtil.isGoOn("是否返回上级界面(y/n)", "n")) break;
+            System.out.println("yuwenfengsb");
         }
     }
 
