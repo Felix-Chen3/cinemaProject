@@ -11,4 +11,8 @@ public interface MovieBiz {
     public boolean delete(Movie movie);
 
     public ArrayList<Movie> queryMovieByName(Movie movie);
+
+    ArrayList<Movie> queryMovieByType(Movie movie);
+
+    ArrayList<Movie> queryMovieByField(Movie movie,String field);
 }

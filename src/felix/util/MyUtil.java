@@ -21,9 +21,8 @@ public class MyUtil {
      * @throws null
     */
     public static boolean isGoOn(String msg, String outChoice) {
-        Scanner scanner1 = new Scanner(System.in);
         System.out.println(msg);
-        String c = scanner1.next();
+        String c = scanner.next();
         if (c.equals(outChoice)) {
             return false;
         }
@@ -79,23 +78,29 @@ public class MyUtil {
      * @author Felix
      * @date 2020-06-26 14:34
      * @describe 录入单一字段的多条数据
-     * @return String[]
+     * @return String
      * @throws
     */
     public static String scanInfo(String field) {
-        Scanner scanner1 = new Scanner(System.in);
         System.out.println(field+"数量:");
-        int length = scanner1.nextInt();
-        if (length < 1) {
-            return null;
-        }
+        int length = Print.getPositiveInt();
         ArrayList list = new ArrayList();
         for (int i = 0; i < length; i++) {
             System.out.println(field+(i+1)+":");
-            String tmp = scanner1.next();
+            String tmp = scanner.next();
             list.add(tmp);
         }
         String afterChange = StringUtils.join(list, "|");
         return afterChange;
+    }
+    /**
+     * @author Felix
+     * @date 2020-06-27 00:30
+     * @describe 刷新缓存区
+     * @return
+     * @throws
+    */
+    public static void flush() {
+        scanner.nextLine();
     }
 }

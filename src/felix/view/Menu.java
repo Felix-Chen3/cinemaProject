@@ -12,6 +12,7 @@ import felix.biz.imp0.MovieBizImp0;
 import felix.entity.Cinema;
 import felix.entity.Movie;
 import felix.util.MyUtil;
+import felix.util.Print;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -194,13 +195,14 @@ public class Menu {
 
     }
 
+    @Test
     public void filmManage() {
         while (true) {
             System.out.println("==========影院管理==========");
-            System.out.println("1.添加电影");
+            System.out.println("1.上架电影");
             System.out.println("2.查询电影");
             System.out.println("3.更改电影信息");
-            System.out.println("4.删除电影");
+            System.out.println("4.下架电影");
             System.out.println("5.返回上级界面");
             choice = scanner.next();
             switch (choice) {
@@ -222,6 +224,7 @@ public class Menu {
             if (!MyUtil.isGoOn("是否返回上级界面(y/n)", "y")) break;
         }
     }
+
     @Test
     public void createMovie() {
         while (true) {
@@ -232,33 +235,24 @@ public class Menu {
             String duration = null;
             String detail = null;
             double score = 0;
-            try {
-                System.out.println("电影名称:");
-                name = scanner.next();
-                System.out.println("电影类型:");
-                type = scanner.next();
-                System.out.println("导演:");
-                director = scanner.next();
-                protagonists = MyUtil.scanInfo("主演");
-                System.out.println("电影时长:");
-                duration = scanner.next();
-                System.out.println("电影详情:");
-                detail = scanner.next();
-                System.out.println("电影评分:");
-                score = scanner.nextDouble();
-            } catch (InputMismatchException e) {
-                System.out.println("！！！！！！！！！!输入格式错误！！！！！！！！！!");
-                if (MyUtil.isGoOn("是否重新添加电影(y/n)", "n")) {
-                    continue;
-                } else {
-                    break;
-                }
-            }
+            System.out.println("电影名称:");
+            name = scanner.next();
+            System.out.println("电影类型:");
+            type = scanner.next();
+            System.out.println("导演:");
+            director = scanner.next();
+            protagonists = MyUtil.scanInfo("主演");
+            System.out.println("电影时长:");
+            duration = scanner.next();
+            System.out.println("电影详情:");
+            detail = scanner.next();
+            System.out.println("电影评分:");
+            score = Print.getPositiveDouble();
             Movie movie = null;
-            if (!MyUtil.isGoOn("是否额外添加标签(y/n)", "y")){
+            if (!MyUtil.isGoOn("是否额外添加标签(y/n)", "y")) {
                 String labels = MyUtil.scanInfo("标签");
-                movie = new Movie(name, type, director, protagonists, duration, detail, score,labels);
-            }else {
+                movie = new Movie(name, type, director, protagonists, duration, detail, score, labels);
+            } else {
                 movie = new Movie(name, type, director, protagonists, duration, detail, score);
             }
             MyUtil.showIsOk(mbi0.create(movie), "添加成功", "添加失败");
@@ -267,6 +261,74 @@ public class Menu {
     }
 
     private void queryMovie() {
+        while (true) {
+            System.out.println("==========电影查询==========");
+            System.out.println("1.按片名查询");
+            System.out.println("2.按类型查询");
+            System.out.println("3.按导演查询");
+            System.out.println("4.按主演查询");
+            System.out.println("5.按评分查询");
+            System.out.println("6.按标签查询");
+            System.out.println("7.返回上级界面");
+            choice = scanner.next();
+            switch (choice) {
+                case "1":
+                    queryMovieByName();
+                    break;
+                case "2":
+                    queryMovieByType();
+                    break;
+                case "3":
+                    queryMovieByDirector();
+                    break;
+                case "4":
+                    queryMovieByProtagonist();
+                    break;
+                case "5":
+                    queryMovieByScore();
+                    break;
+                case "6":
+                    queryMovieByLabels();
+                    break;
+                default:
+                    break;
+            }
+            if (!MyUtil.isGoOn("是否返回上级界面(y/n)", "y")) break;
+        }
+    }
+    @Test
+    public void queryMovieByName() {
+        while (true) {
+            System.out.println("输入要查询的电影名称:");
+            String name = scanner.next();
+            Movie movie = new Movie(name,null,null,null,null,null,0,null);
+            ArrayList<Movie> rs = mbi0.queryMovieByField(movie,"name");
+            MyUtil.showInfo(rs, "电影结果");
+            if (!MyUtil.isGoOn("是否返回上级界面(y/n)", "y")) break;
+        }
+    }
+    @Test
+    public void queryMovieByType() {
+        while (true) {
+            System.out.println("输入要查询的电影类型:");
+            String type = scanner.next();
+            Movie movie = new Movie(null,type,null,null,null,null,0,null);
+            ArrayList<Movie> rs = mbi0.queryMovieByField(movie,type);
+            MyUtil.showInfo(rs, "电影结果");
+            if (!MyUtil.isGoOn("是否返回上级界面(y/n)", "y")) break;
+        }
+    }
+
+    private void queryMovieByDirector() {
+    }
+
+    private void queryMovieByProtagonist() {
+    }
+
+    private void queryMovieByScore() {
+    }
+
+    private void queryMovieByLabels() {
     }
 
     private void updateMovie() {

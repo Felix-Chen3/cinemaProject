@@ -30,12 +30,22 @@ public class MovieBizImp0 implements MovieBiz {
     }
 
     @Override
-    public boolean delete(Movie movie) {
-        return false;
+    public ArrayList<Movie> queryMovieByName(Movie movie) {
+        return mdi0.fuzzyQueryByNameAll(movie);
     }
 
     @Override
-    public ArrayList<Movie> queryMovieByName(Movie movie) {
-        return null;
+    public ArrayList<Movie> queryMovieByType(Movie movie) {
+        return mdi0.fuzzyQueryByTypeAll(movie);
+    }
+
+    @Override
+    public ArrayList<Movie> queryMovieByField(Movie movie, String field) {
+        return mdi0.fuzzyQueryByFieldAll(movie,field);
+    }
+
+    @Override
+    public boolean delete(Movie movie) {
+        return false;
     }
 }

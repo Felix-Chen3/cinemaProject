@@ -15,5 +15,7 @@ public interface MovieDao {
 
     public ArrayList<Movie> fuzzyQueryByNameAll(Movie movie);
 
-    public ArrayList<Movie> fuzzyQueryByAddressAll(Movie movie);
+    ArrayList<Movie> fuzzyQueryByTypeAll(Movie movie);
+
+    ArrayList<Movie> fuzzyQueryByFieldAll(Movie movie, String field);
 }
