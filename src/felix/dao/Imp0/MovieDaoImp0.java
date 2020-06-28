@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class MovieDaoImp0 extends BaseDao implements MovieDao {
     @Override
     public boolean createMovie(Movie movie) {
-        String sql = "insert into movie(id,name,type,director,protagonist,duration,detail,score,labels,isReleased)values(?,?,?,?,?,?,?,?,?)";
+        String sql = "insert into movie(name,type,director,protagonist,duration,detail,score,labels,isReleased)values(?,?,?,?,?,?,?,?,?)";
         int rs = update(sql, movie.getName(), movie.getType(), movie.getDirector(), movie.getProtagonist(), movie.getDuration(), movie.getDetail(), movie.getScore(), movie.getLabels(),movie.isReleased());
         if (rs == 0) {
             return false;

@@ -11,11 +11,10 @@ import felix.dao.Imp0.MovieDaoImp0;
 import felix.entity.Movie;
 
 import java.util.ArrayList;
-import java.util.Random;
+
 
 public class MovieBizImp0 implements MovieBiz {
     private MovieDaoImp0 mdi0 = new MovieDaoImp0();
-    private Random random = new Random();
 
     @Override
     public boolean create(Movie movie) {
@@ -103,8 +102,7 @@ public class MovieBizImp0 implements MovieBiz {
 
     @Override
     public int deleteMovie(int id) {
-        int i = -(random.nextInt(99999));
-        return  mdi0.update("update movie set id = ? where id  =?",i,id);
+        return  mdi0.update("delete from movie where id =?",id);
     }
 
 }

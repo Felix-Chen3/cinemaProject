@@ -47,6 +47,10 @@ public class BaseDao {
                     //2.将私有成员属性设置为允许访问
                     field.setAccessible(true);
                     //3.将属性放入
+                        //3.1 LocalDataTime和sql的datetime转换
+                    if (columnLabel.equals("time")) {
+                        columnValue = ((Timestamp) columnValue).toLocalDateTime();
+                    }
                     field.set(t, columnValue);
                 }
                 //将得到的对象放入数组

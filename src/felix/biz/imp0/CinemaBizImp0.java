@@ -70,7 +70,6 @@ public class CinemaBizImp0 implements CinemaBiz {
 
     @Override
     public int deleteCinema(int id) {
-        int i = -(random.nextInt(99999));
-        return  cdi0.update("update cinema set id = ? where id  =?",i,id);
+        return  cdi0.update("delete from cinema where id  =?",id);
     }
 }

@@ -6,6 +6,7 @@
 package felix.util;
 
 import felix.entity.Cinema;
+import felix.entity.Hall;
 import felix.entity.Movie;
 import org.apache.commons.lang.StringUtils;
 
@@ -53,25 +54,32 @@ public class MyUtil {
     */
     public static <T> void showInfo(ArrayList<T> al, String msg)  {
         if (al.size() == 0) {
+            System.out.println("----------------------------");
             System.out.println("无相关数据");
         } else {
             System.out.println("----------" + msg + "----------");
             for (T t : al) {
-                if (t instanceof Cinema) {
-                    Cinema c = (Cinema) t;
-                    if (c.getId() > 0) {
-                        System.out.println(t);
-                    }
-                }if (t instanceof Movie) {
-                    Movie c = (Movie) t;
-                    if (c.getId() > 0) {
-                        System.out.println(t);
-                    }
+//                if (t instanceof Cinema) {
+//                    Cinema c = (Cinema) t;
+//                    if (c.getId() > 0) {
+//                        System.out.println(t);
+//                    }
+//                }if (t instanceof Movie) {
+//                    Movie c = (Movie) t;
+//                    if (c.getId() > 0) {
+//                        System.out.println(t);
+//                    }
+//                }if (t instanceof Hall) {
+//                    Hall c = (Hall) t;
+//                    if (c.getId() > 0) {
+//                        System.out.println(t);
+//                    }
+                System.out.println(t);
                 }
             }
             System.out.println("----------------------------");
         }
-    }
+
     /**
      * @author Felix
      * @date 2020-06-26 14:11
