@@ -11,9 +11,11 @@ import felix.dao.Imp0.MovieDaoImp0;
 import felix.entity.Movie;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MovieBizImp0 implements MovieBiz {
     private MovieDaoImp0 mdi0 = new MovieDaoImp0();
+    private Random random = new Random();
 
     @Override
     public boolean create(Movie movie) {
@@ -45,7 +47,64 @@ public class MovieBizImp0 implements MovieBiz {
     }
 
     @Override
-    public boolean delete(Movie movie) {
-        return false;
+    public ArrayList<Movie> queryMovieByScore(double min, double max) {
+        return mdi0.queryMovieByScore(min,max);
     }
+
+    @Override
+    public ArrayList<Movie> queryMovieAll() {
+        return mdi0.queryAll(Movie.class,"select id,name,type,director,protagonist,duration,detail,score,labels,isReleased from movie");
+    }
+
+    @Override
+    public int updateName(int id, String changeString) {
+        return  mdi0.update("update movie set name = ? where id  = ?",changeString,id);
+    }
+
+    @Override
+    public int updateType(int id, String changeString) {
+        return  mdi0.update("update movie set type = ? where id  = ?",changeString,id);
+    }
+
+    @Override
+    public int updateDirector(int id, String changeString) {
+        return  mdi0.update("update movie set director = ? where id  = ?",changeString,id);
+    }
+
+    @Override
+    public int updateProtagonist(int id, String changeString) {
+        return  mdi0.update("update movie set protagonist = ? where id  = ?",changeString,id);
+    }
+
+    @Override
+    public int updateDuration(int id, String changeString) {
+        return  mdi0.update("update movie set duration = ? where id  = ?",changeString,id);
+    }
+
+    @Override
+    public int updateDetail(int id, String changeString) {
+        return  mdi0.update("update movie set detail = ? where id  = ?",changeString,id);
+    }
+
+    @Override
+    public int updateScore(int id, Double positiveDouble) {
+        return  mdi0.update("update movie set score = ? where id  = ?",positiveDouble,id);
+    }
+
+    @Override
+    public int updateLabels(int id, String changeString) {
+        return  mdi0.update("update movie set labels = ? where id  = ?",changeString,id);
+    }
+
+    @Override
+    public int updateIsReleased(int id, boolean aBoolean) {
+        return  mdi0.update("update movie set name = ? where id  = ?",aBoolean,id);
+    }
+
+    @Override
+    public int deleteMovie(int id) {
+        int i = -(random.nextInt(99999));
+        return  mdi0.update("update movie set id = ? where id  =?",i,id);
+    }
+
 }

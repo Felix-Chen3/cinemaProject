@@ -18,4 +18,6 @@ public interface MovieDao {
     ArrayList<Movie> fuzzyQueryByTypeAll(Movie movie);
 
     ArrayList<Movie> fuzzyQueryByFieldAll(Movie movie, String field);
+
+    ArrayList<Movie> queryMovieByScore(double min, double max);
 }

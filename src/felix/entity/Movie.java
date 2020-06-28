@@ -5,7 +5,9 @@
  */
 package felix.entity;
 
-import java.util.ArrayList;
+
+
+import java.text.ParseException;
 import java.util.Objects;
 
 public class Movie {
@@ -18,6 +20,19 @@ public class Movie {
     private String detail;
     private double score;
     private String labels;
+    private boolean isReleased = true;
+
+    public Movie(String name, String type, String director, String protagonist, String duration, String detail, double score, String labels, boolean isReleased) {
+        this.name = name;
+        this.type = type;
+        this.director = director;
+        this.protagonist = protagonist;
+        this.duration = duration;
+        this.detail = detail;
+        this.score = score;
+        this.labels = labels;
+        this.isReleased = isReleased;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -28,12 +43,20 @@ public class Movie {
                 Objects.equals(director, movie.director);
     }
 
+    public boolean isReleased() {
+        return isReleased;
+    }
+
+    public void setReleased(boolean released) {
+        isReleased = released;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(name, director);
     }
 
-    public Movie(String name, String type, String director, String protagonist, String duration, String detail, double score, String labels) {
+    public Movie(String name, String type, String director, String protagonist, String duration, String detail, double score, String labels)  {
         this.name = name;
         this.type = type;
         this.director = director;
@@ -44,7 +67,7 @@ public class Movie {
         this.labels = labels;
     }
 
-    public Movie(String name, String type, String director, String protagonist, String duration, String detail, double score) {
+    public Movie(String name, String type, String director, String protagonist, String duration, String detail, double score)  {
         this.name = name;
         this.type = type;
         this.director = director;
@@ -106,7 +129,7 @@ public class Movie {
         return detail;
     }
 
-    public Movie() {
+    public Movie() throws ParseException {
     }
 
     public void setDetail(String detail) {
