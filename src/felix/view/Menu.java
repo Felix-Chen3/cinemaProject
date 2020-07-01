@@ -1,26 +1,37 @@
 package felix.view;
 
 import felix.biz.imp0.*;
-import felix.entity.Cinema;
-import felix.entity.Hall;
-import felix.entity.Movie;
-import felix.entity.Session;
+import felix.dao.Imp0.*;
+import felix.dao.SessionDao;
+import felix.entity.*;
 import felix.util.MyUtil;
 import felix.util.Print;
 import org.junit.Test;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Menu {
     private final Scanner scanner = new Scanner(System.in);
     private String choice;
+    private final Random random = new Random();
     private final AdminBizImp0 abi0 = new AdminBizImp0();
     private final CinemaBizImp0 cbi0 = new CinemaBizImp0();
     private final MovieBizImp0 mbi0 = new MovieBizImp0();
     private final HallBizImp0 hbi0 = new HallBizImp0();
     private final SessionBizImp0 sbi0 = new SessionBizImp0();
+    private final UserBizImp0 ubi0 = new UserBizImp0();
+    private final QuerySessionDaoImp0 dsdi0 = new QuerySessionDaoImp0();
+    private final TicketDaoImp0 tdi0 = new TicketDaoImp0();
+    private final TicketBizImp0 tbi0 = new TicketBizImp0();
+    private final SessionDaoImp0 sdi0 = new SessionDaoImp0();
+    private final UserDaoImp0 udi0 = new UserDaoImp0();
+    private final QuerySessionCapacityDaoImp0 qscdi0 = new QuerySessionCapacityDaoImp0();
+    private final RechargerBizImp0 rbi0 = new RechargerBizImp0();
 
     @Test
     public void mainMenu() {
@@ -77,7 +88,8 @@ public class Menu {
             System.out.println("2.放映厅管理");
             System.out.println("3.影片管理");
             System.out.println("4.场次管理");
-            System.out.println("5.退出登录");
+            System.out.println("5.查看收益");
+            System.out.println("0.退出登录");
             choice = scanner.next();
             switch (choice) {
                 case "1":
@@ -92,6 +104,9 @@ public class Menu {
                 case "4":
                     sessionManage();
                     break;
+                case "5":
+                    earningView();
+                    break;
                 default:
                     if (!MyUtil.isGoOn("是否退出登录(y/n)", "y")) {
                         flag = 100;
@@ -100,6 +115,7 @@ public class Menu {
             }
         }
     }
+
 
     public void cinemaManege() {
         int flag = 0;
@@ -135,7 +151,8 @@ public class Menu {
 
     @Test
     public void createCinema() {
-        while (true) {
+        int flag = 0;
+        while (flag < 100) {
             System.out.println("影院名称:");
             String name = scanner.next();
             System.out.println("影院地址:");
@@ -143,7 +160,7 @@ public class Menu {
             Cinema cinema = new Cinema(name, address);
             MyUtil.showIsOk(cbi0.create(cinema), "添加成功", "添加失败");
             if (!MyUtil.isGoOn("是否继续添加(y/n)", "n")) {
-                break;
+                flag = 100;
             }
         }
     }
@@ -746,6 +763,7 @@ public class Menu {
         }
     }
 
+    @Test
     public void sessionManage() {
         int flag = 0;
         while (flag < 100) {
@@ -791,8 +809,8 @@ public class Menu {
             System.out.println("价格");
             int price = Print.getPositiveInt();
             Session session = new Session(hid, mid, time, price);
-            MyUtil.showIsOk(sbi0.create(session), "添加成功", "添加失败");
-            if (!MyUtil.isGoOn("是否继续添加放映厅(y/n)", "n")) {
+            MyUtil.showIsOk(sbi0.create(session), "添加成功", "添加失败,请检查时间是否冲突");
+            if (!MyUtil.isGoOn("是否继续添加场次(y/n)", "n")) {
                 break;
             }
         }
@@ -935,7 +953,7 @@ public class Menu {
 
         }
     }
-    
+
     private void deleteSession() {
         while (true) {
             System.out.println("==========删除场次==========");
@@ -952,10 +970,320 @@ public class Menu {
             if (!MyUtil.isGoOn("是否返回上层界面(y/n)", "y")) break;
         }
     }
-    
+
+    private void earningView() {
+    }
 
     public void userCheck() {
+        int flag = 0;
+        while (flag < 100) {
+            System.out.println("1.注册");
+            System.out.println("2.登录");
+            System.out.println("0.返回上一级");
+            choice = scanner.next();
+            switch (choice) {
+                case "1":
+                    createUser();
+                    break;
+                case "2":
+                    userLogin();
+                    break;
+                default: {
+                    flag = 100;
+                    break;
+                }
+            }
+        }
+    }
 
+    @Test
+    public void createUser() {
+        while (true) {
+            System.out.println("用户名:");
+            String name = scanner.next();
+            System.out.println("密码");
+            String password = scanner.next();
+            String capacity = null;
+            User user = new User(name, password, 0, 0, null);
+            MyUtil.showIsOk(ubi0.register(user), "添加成功", "添加失败,该用户名已存在");
+            if (!MyUtil.isGoOn("是否继续注册(y/n)", "n")) {
+                break;
+            }
+        }
+
+    }
+
+    @Test
+    public void userLogin() {
+        while (true) {
+            System.out.println("==========身份校验==========");
+            System.out.println("输入账号:");
+            String name = scanner.next();
+            System.out.println("输入密码:");
+            String password = scanner.next();
+            User user = new User(name, password, 0, 0, null);
+            if (ubi0.login(user)) {
+                System.out.println("登录成功");
+                int uid = udi0.queryByName(user).getId();
+                UserMenu(uid);
+                break;
+            } else {
+                System.out.println("登录失败，请确认账号密码是否正确");
+            }
+            if (!MyUtil.isGoOn("是否继续登录(y/n)", "n")) {
+                break;
+            }
+        }
+    }
+
+    private void UserMenu(int uid) {
+        int flag = 0;
+        while (flag < 100) {
+            System.out.println("==========欢迎进入用户界面==========");
+            System.out.println("1.浏览电影");
+            System.out.println("2.购票");
+            System.out.println("3.充值");
+            System.out.println("4.热映推荐");
+            System.out.println("0.退出登录");
+            choice = scanner.next();
+            switch (choice) {
+                case "1":
+                    queryMovie();
+                    break;
+                case "2":
+                    ticketPurchaseByMovie(uid);
+                    break;
+                case "3":
+                    recharge(uid);
+                    break;
+                case "4":
+                    recommend();
+                    break;
+                default:
+                    if (!MyUtil.isGoOn("是否退出登录(y/n)", "y")) {
+                        flag = 100;
+                        break;
+                    }
+            }
+        }
+    }
+
+
+    public void ticketPurchaseByMovie(int uid) {
+        while (true) {
+
+            int mid = isMovieIdExistAndGet();
+            int sid = isSessionIdExistAndGet(mid);
+
+            System.out.println("输入想要购买的数量");
+            int num = Print.getPositiveInt();
+            boolean isEnough = ubi0.checkEnoughBalance(uid, sid, num);
+            if (!isEnough) {
+                System.out.println("余额不足,请充值后再试");
+                return;
+            }
+            for (int i = 0; i < num; ) {
+                sessionShow(sid);
+                int row = getLegalRow(sid);
+                int column = getLegalColumn(sid);
+                Ticket ticket = new Ticket(uid, sid, row, column);
+                if (tbi0.create(ticket)) {
+                    System.out.println("购买成功");
+                    ubi0.deductBalance(uid, sid);
+                    i++;
+                } else {
+                    System.out.println("购买失败，该座次已被购买");
+                    continue;
+                }
+            }
+            if (!MyUtil.isGoOn("是否继续购买其他场次电影票(y/n)", "n")) {
+                break;
+            }
+        }
+    }
+
+    private int getLegalColumn(int sid) {
+        Session session = sbi0.querySessionById(sid);
+        Hall hall = hbi0.queryHallById(session.getHid());
+        String size = hall.getCapacity();
+        int columnMax = 0;
+        int column = 0;
+        switch (size) {
+            case "S":
+                columnMax = 6;
+                break;
+            case "M":
+                columnMax = 8;
+                break;
+            case "L":
+                columnMax = 10;
+                break;
+        }
+        while (true) {
+            System.out.println("输入要购买的座次");
+            column = Print.getPositiveInt();
+            if (column > columnMax) {
+                System.out.println("请检查输入座次是否存在");
+            } else {
+                break;
+            }
+        }
+        return column;
+    }
+
+    private int getLegalRow(int sid) {
+        Session session = sbi0.querySessionById(sid);
+        Hall hall = hbi0.queryHallById(session.getHid());
+        String size = hall.getCapacity();
+        int rowMax = 0;
+        int row = 0;
+        switch (size) {
+            case "S":
+                rowMax = 5;
+                break;
+            case "M":
+                rowMax = 7;
+                break;
+            case "L":
+                rowMax = 9;
+                break;
+        }
+        while (true) {
+            System.out.println("输入要购买的排数");
+            row = Print.getPositiveInt();
+            if (row > rowMax) {
+                System.out.println("请检查输入排数是否存在");
+            } else {
+                break;
+            } 
+        }
+        return row;
+    }
+
+    private int isSessionIdExistAndGet(int mid) {
+        int sid = 0;
+        while (true) {
+            ArrayList<QuerySession> sessionList = dsdi0.show(mid);
+            MyUtil.showInfo(sessionList, "场次列表");
+            System.out.println("输入想要购买的场次id");
+            sid = Print.getPositiveInt();
+            ArrayList sidList = new ArrayList();
+            for (int i = 0; i < sessionList.size(); i++) {
+                sidList.add(sessionList.get(i).getId());
+            }
+            if (!sidList.contains(sid)) {
+                System.out.println("无此场次id，请重新输入");
+            } else {
+                break;
+            }
+        }
+        return sid;
+    }
+
+    private int isMovieIdExistAndGet() {
+        int mid = 0;
+        while (true) {
+            ArrayList<Movie> movieList = queryMovieByUp();
+            System.out.println("选择电影id");
+            mid = Print.getPositiveInt();
+            ArrayList midList = new ArrayList();
+            for (int i = 0; i < movieList.size(); i++) {
+                midList.add(movieList.get(i).getId());
+            }
+            if (!midList.contains(mid)) {
+                System.out.println("无此电影id，请重新输入");
+            } else {
+                break;
+            }
+        }
+        return mid;
+    }
+
+    private void sessionShow(int sid) {
+        int row = 0, column = 0;
+        String capacity = qscdi0.querySessionByIdWithCapacity(sid).getCapacity();
+        switch (capacity) {
+            case "S":
+                row = 5;
+                column = 6;
+                break;
+            case "M":
+                row = 7;
+                column = 8;
+                break;
+            case "L":
+                row = 9;
+                column = 10;
+                break;
+            default:
+                break;
+        }
+        boolean[][] seats = new boolean[row][column];
+        ArrayList<Ticket> rs = tdi0.queryTicketAllBySid(sid);
+        if (rs != null) {
+            for (int i = 0; i < rs.size(); i++) {
+                int rowed = rs.get(i).getRow();
+                int columned = rs.get(i).getColumn();
+                seats[rowed - 1][columned - 1] = true;
+            }
+        }
+
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
+                if (seats[i][j]) {
+                    System.out.print("booked\t");
+                } else {
+                    System.out.print((i + 1) + "排" + (j + 1) + "座\t");
+                }
+            }
+            System.out.println();
+        }
+    }
+
+
+    public ArrayList<Movie> queryMovieByUp() {
+        Movie m = new Movie(null, null, null, null, null, null, 0, null, true);
+        ArrayList<Movie> rs = mbi0.queryMovieByField(m, "isReleased");
+        MyUtil.showInfo(rs, "时下热映");
+        return rs;
+    }
+
+
+    private void recharge(int uid) {
+        while (true) {
+            System.out.println("输入您要充值的金额");
+            double amount = Print.getPositiveInt();
+            System.out.println("请输入密码");
+            String thisPassword = scanner.next();
+            String password = ubi0.queryUserById(uid).getPassword();
+            if (!password.equals(thisPassword)) {
+                System.out.println("密码错误");
+                return;
+            }
+            int flag = 0;
+            while (flag<100) {
+                System.out.println("请输入验证码");
+                String test = "";
+                String[] strings = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+                for (int i = 0; i < 4; i++) {
+                    test= test+strings[random.nextInt(26)];
+                }
+                System.out.println(test);
+                String userText = scanner.next();
+                if (!userText.equals(test)) {
+                    System.out.println("验证码有误");
+                } else {
+                    flag = 100;
+                }
+            }
+            Recharger recharger = new Recharger(uid, amount, LocalDateTime.now());
+            MyUtil.showIsOk(rbi0.create(recharger), "充值成功", "充值失败");
+            ubi0.recharger(uid, amount);
+            if (!MyUtil.isGoOn("是否继续充值(y/n)", "n")) break;
+        }
+    }
+
+    private void recommend() {
     }
 
 }

@@ -30,7 +30,7 @@ public class HallBizImp0 implements HallBiz {
 
     @Override
     public Hall queryHallById(int id) {
-        return null;
+        return hdi0.queryOne(Hall.class,"select id,name,cid,capacity from hall where id =?",id);
     }
 
     @Override

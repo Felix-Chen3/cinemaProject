@@ -15,10 +15,10 @@ public class Test {
             String a = "s";
         }
         LocalDateTime d1 = LocalDateTime.now();
-        LocalDateTime d2 = LocalDateTime.of(2020, 6, 28, 13, 23);
-        System.out.println(d2.compareTo(d));
+        LocalDateTime d2 = LocalDateTime.of(2019, 6, 28, 13, 23);
+        System.out.println(d1.compareTo(d2));
 
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        System.out.println("1\t1/t");
 
     }
 }

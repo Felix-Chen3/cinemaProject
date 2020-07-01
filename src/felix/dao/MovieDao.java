@@ -1,19 +1,21 @@
 package felix.dao;
 
 
-
 import felix.entity.Movie;
 
 import java.util.ArrayList;
 
 public interface MovieDao {
-    public boolean createMovie(Movie movie);
+    boolean createMovie(Movie movie);
 
-    public Movie queryByName(Movie movie);
+    Movie queryById(int id);
 
-    public ArrayList<Movie> queryByNameAll(Movie movie);
 
-    public ArrayList<Movie> fuzzyQueryByNameAll(Movie movie);
+    Movie queryByName(Movie movie);
+
+    ArrayList<Movie> queryByNameAll(Movie movie);
+
+    ArrayList<Movie> fuzzyQueryByNameAll(Movie movie);
 
     ArrayList<Movie> fuzzyQueryByTypeAll(Movie movie);
 

@@ -17,4 +17,6 @@ public interface SessionDao {
     ArrayList<Session> queryByNameAll(Session session);
 
     boolean createSession(Session session);
+
+
 }

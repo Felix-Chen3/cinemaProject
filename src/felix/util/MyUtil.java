@@ -5,6 +5,7 @@
  */
 package felix.util;
 
+import felix.dao.Imp0.MovieDaoImp0;
 import felix.entity.Cinema;
 import felix.entity.Hall;
 import felix.entity.Movie;
@@ -16,6 +17,7 @@ import java.util.Scanner;
 
 public class MyUtil {
     private static Scanner scanner = new Scanner(System.in);
+    private static MovieDaoImp0 mdi0 = new MovieDaoImp0();
     /**
      * @author Felix
      * @date 2020-06-24 15:22
@@ -123,4 +125,17 @@ public class MyUtil {
     public static void flush() {
         scanner.nextLine();
     }
+
+    /**
+     * @author Felix
+     * @date 2020-06-30 16:30
+     * @describe id是否在对应泛型列表中
+     * @return
+     * @throws
+    */
+
+
+//    public static int getDurationBySessionId(int id) {
+//        Integer.valueOf(mdi0.queryById(rs.get(i).getMid()).getDuration())
+//    }
 }

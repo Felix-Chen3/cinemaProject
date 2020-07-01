@@ -33,6 +33,11 @@ public class MovieDaoImp0 extends BaseDao implements MovieDao {
         String sql = "select id,name,type,director,protagonist,duration,detail,score,labels,isReleased from movie where name =?";
         return queryAll(Movie.class, sql, movie.getName());
     }
+    @Override
+    public Movie queryById(int id) {
+        String sql = "select duration from movie where id =?";
+        return queryOne(Movie.class, sql, id);
+    }
 
     @Override
     public ArrayList<Movie> fuzzyQueryByNameAll(Movie movie) {

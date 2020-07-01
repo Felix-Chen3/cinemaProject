@@ -47,8 +47,8 @@ public class BaseDao {
                     //2.将私有成员属性设置为允许访问
                     field.setAccessible(true);
                     //3.将属性放入
-                        //3.1 LocalDataTime和sql的datetime转换
-                    if (columnLabel.equals("time")) {
+                    //3.1 LocalDataTime和sql的datetime转换
+                    if (columnLabel.contains("time")) {
                         columnValue = ((Timestamp) columnValue).toLocalDateTime();
                     }
                     field.set(t, columnValue);
@@ -106,6 +106,9 @@ public class BaseDao {
                     //2.将私有成员属性设置为允许访问
                     field.setAccessible(true);
                     //3.将属性放入
+                    if (columnLabel.contains("time")) {
+                        columnValue = ((Timestamp) columnValue).toLocalDateTime();
+                    }
                     field.set(t, columnValue);
                 }
                 //将得到的对象放入数组
@@ -130,7 +133,7 @@ public class BaseDao {
         return null;
     }
 
-    public int update(String sql,Object...args){
+    public int update(String sql, Object... args) {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -142,11 +145,14 @@ public class BaseDao {
             return ps.executeUpdate();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (SQLIntegrityConstraintViolationException e) {
+            System.out.println("请检查输入信息是否存在");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
+
             JDBCUtils.closeResource(conn, ps);
         }
         return 0;

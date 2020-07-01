@@ -6,6 +6,7 @@
 package felix.biz.imp0;
 
 import felix.biz.SessionBiz;
+import felix.dao.Imp0.MovieDaoImp0;
 import felix.dao.Imp0.SessionDaoImp0;
 import felix.entity.Movie;
 import felix.entity.Session;
@@ -15,14 +16,42 @@ import java.util.ArrayList;
 
 public class SessionBizImp0 implements SessionBiz {
     private SessionDaoImp0 sdi0 = new SessionDaoImp0();
+    private MovieDaoImp0 mdi0 = new MovieDaoImp0();
+    private MovieBizImp0 mbi0 = new MovieBizImp0();
+    /**
+     * @author Felix
+     * @date 2020-06-29 17:15
+     * @describe 包含时间冲突判定的场次创建
+     * @return
+     * @throws
+    */
     @Override
     public boolean create(Session session) {
-        return sdi0.createSession(session);
+        ArrayList<Session> rs = querySessionByHidAndMid(session);
+        if (rs.size() == 0) {
+            return sdi0.createSession(session);
+        }
+        for (int i = 0; i < rs.size(); i++) {
+            LocalDateTime start = rs.get(i).getTime();
+            int length = Integer.valueOf(mdi0.queryById(rs.get(i).getMid()).getDuration());
+            LocalDateTime end = start.plusMinutes(length);
+            LocalDateTime thisStart = rs.get(i).getTime();
+            int thisLength = Integer.valueOf(mdi0.queryById(session.getMid()).getDuration());
+            LocalDateTime thisEnd = thisStart.plusMinutes(thisLength);
+            if ((thisEnd.compareTo(start) == -1) || (thisStart.compareTo(end) == 1)) {
+                return sdi0.createSession(session);
+            }
+        }
+        return false;
+    }
+
+    private ArrayList<Session> querySessionByHidAndMid(Session session) {
+        return sdi0.queryAll(Session.class, "select id,hid,mid,time,price from session where hid = ? and mid = ?", session.getHid(), session.getMid());
     }
 
     @Override
     public Session querySessionById(int id) {
-        return null;
+        return sdi0.queryOne(Session.class,"select id,hid,mid,time,price from session where id = ?",id);
     }
 
     @Override
