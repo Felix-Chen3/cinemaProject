@@ -100,11 +100,7 @@ public class UserBizImp0 implements UserBiz {
         Session session = sdi0.queryOne(Session.class, "select price from Session where id = ?", sid);
         double price = session.getPrice();
         double totalCost = price * discount * num;
-        if (balance >= totalCost) {
-            return true;
-        } else {
-            return false;
-        }
+        return balance >= totalCost;
     }
 
     @Override

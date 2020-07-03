@@ -35,4 +35,9 @@ public class TicketBizImp0 implements TicketBiz {
     public ArrayList<Ticket> queryTicketByUid(int uid) {
         return tdi0.queryAll(Ticket.class, "select id,uid,sid from ticket where uid =?", uid);
     }
+
+    @Override
+    public ArrayList<Ticket> queryTicketAll() {
+        return tdi0.queryAll(Ticket.class,"select id,uid,sid from ticket");
+    }
 }

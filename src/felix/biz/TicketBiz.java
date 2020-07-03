@@ -10,4 +10,6 @@ public interface TicketBiz {
     boolean create(Ticket ticket);
 
     ArrayList<Ticket> queryTicketByUid(int uid);
+
+    ArrayList<Ticket> queryTicketAll();
 }

@@ -3,14 +3,13 @@ package felix.view;
 import felix.biz.imp0.*;
 import felix.dao.Imp0.*;
 import felix.entity.*;
+import felix.entity.Collection;
 import felix.util.MyUtil;
 import felix.util.Print;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Menu {
     private final Scanner scanner = new Scanner(System.in);
@@ -112,6 +111,55 @@ public class Menu {
                     }
             }
         }
+    }
+@Test
+    public void earningView() {
+        do {
+            System.out.println("==========查看收益==========");
+            System.out.println("1.根据电影票房查看");
+            System.out.println("2.根据影院地址查看");
+            System.out.println("0.返回上一级");
+            choice = scanner.next();
+            switch (choice) {
+                case "1":
+                    earningViewByMovie();
+                    break;
+                case "2":
+                    earningViewByCinema();
+                    break;
+                default:
+                    break;
+            }
+        } while (MyUtil.isGoOn("是否返回上一级(y/n)", "y"));
+    }
+
+    private void earningViewByCinema() {
+        ArrayList<Ticket> tickets = tbi0.queryTicketAll();
+        MyHashMap map = new MyHashMap();
+        for (Ticket t : tickets) {
+            int sid = t.getSid();
+            Session session = sbi0.querySessionById(sid);
+            double price = session.getPrice();
+            int hid = session.getHid();
+            Hall hall = hbi0.queryHallById(hid);
+            int cid = hall.getCid();
+            map.put(cid, price);
+        }
+        List<Map.Entry<Integer, Double>> list = new ArrayList<>(map.entrySet());
+        Collections.sort(list, new Comparator<Map.Entry<Integer, Double>>() {
+            @Override
+            public int compare(Map.Entry<Integer, Double> o1, Map.Entry<Integer, Double> o2) {
+                return o2.getValue().compareTo(o1.getValue());
+            }
+        });
+        System.out.println("==========影院盈利排行榜==========");
+        for (Map.Entry<Integer, Double> e : list) {
+            String cinemaName = cbi0.queryCinemaById(e.getKey()).getName();
+            String cinemaAddress = cbi0.queryCinemaById(e.getKey()).getAddress();
+            System.out.println("影院id:" + e.getKey() + "\t影院名称:" + cinemaName + "\t影院地址:" + cinemaAddress + "\t影院总票房" + e.getValue());
+        }
+        System.out.println("=================================");
+
     }
 
 
@@ -277,8 +325,13 @@ public class Menu {
             if (flag) cbi0.deleteCinema(cid);
         } while (MyUtil.isGoOn("是否返回上层界面(y/n)", "y"));
     }
-
-    private int isCinemaIdExistAndGet() {
+    /**
+     * @author Felix
+     * @date 2020/7/3 17:41
+     * @describe 获取一个存在的影院id
+     * @return int
+    */
+    public int isCinemaIdExistAndGet() {
         int cid;
         while (true) {
             ArrayList<Cinema> cinemaList = cbi0.queryCinemaAll();
@@ -598,6 +651,7 @@ public class Menu {
             System.out.println("所属影院id");
             int cid = Print.getPositiveInt();
             String capacity;
+            // 放映厅大小只能在给定的3个选项中选
             while (true) {
                 System.out.println("放映厅大小(S/M/L)");
                 choice = scanner.next();
@@ -937,7 +991,12 @@ public class Menu {
             if (!MyUtil.isGoOn("是否返回上层界面(y/n)", "y")) break;
         }
     }
-
+    /**
+     * @author Felix
+     * @date 2020/7/3 17:43
+     * @describe 确认该场次是否能被删除：通过取出放映时间与电影时常，若该场次已经买票且未放映，则该场次不能能被删除，
+     * @return boolean
+    */
     private boolean SessionCanNotDelete(int sid) {
         boolean isSold = (tdi0.queryTicketAllBySid(sid).size() != 0);
         if (isSold) {
@@ -949,8 +1008,30 @@ public class Menu {
             return now.compareTo(end) <= 0;
         } else return false;
     }
-
-    private void earningView() {
+@Test
+    public void earningViewByMovie() {
+        ArrayList<Ticket> tickets = tbi0.queryTicketAll();
+        MyHashMap map = new MyHashMap();
+        for (Ticket t : tickets) {
+            int sid = t.getSid();
+            Session session = sbi0.querySessionById(sid);
+            double price = session.getPrice();
+            int mid = session.getMid();
+            map.put(mid, price);
+        }
+        List<Map.Entry<Integer, Double>> list = new ArrayList<>(map.entrySet());
+        Collections.sort(list, new Comparator<Map.Entry<Integer, Double>>() {
+            @Override
+            public int compare(Map.Entry<Integer, Double> o1, Map.Entry<Integer, Double> o2) {
+                return o2.getValue().compareTo(o1.getValue());
+            }
+        });
+    System.out.println("==========票房排行榜==========");
+    for (Map.Entry<Integer, Double> e : list) {
+            String movieName = mbi0.queryMovieById(e.getKey()).getName();
+            System.out.println("电影id:" + e.getKey() + "\t电影名称:" + movieName + "\t电影票房" + e.getValue());
+        }
+    System.out.println("==============================");
     }
 
     public void userCheck() {
@@ -1159,7 +1240,12 @@ public class Menu {
             System.out.println("您暂时无Vip等级,请充值后再试");
         }
     }
-
+    /**
+     * @author Felix
+     * @date 2020/7/3 17:49
+     * @describe 修改密码：修改后密码相同不能修改
+     * @return void
+    */
     private void changePassword(int uid) {
         System.out.println("请输入当前密码:");
         String thisPassword = scanner.next();
@@ -1222,7 +1308,12 @@ public class Menu {
             }
         } while (MyUtil.isGoOn("是否继续购买其他场次电影票(y/n)", "n"));
     }
-
+    /**
+     * @author Felix
+     * @date 2020/7/3 17:54
+     * @describe 获取对应场次的合法座次
+     * @return int
+    */
     private int getLegalColumn(int sid) {
         Session session = sbi0.querySessionById(sid);
         Hall hall = hbi0.queryHallById(session.getHid());
@@ -1251,7 +1342,12 @@ public class Menu {
         }
         return column;
     }
-
+    /**
+     * @author Felix
+     * @date 2020/7/3 17:54
+     * @describe 获取对应场次的合法排数
+     * @return int
+    */
     private int getLegalRow(int sid) {
         Session session = sbi0.querySessionById(sid);
         Hall hall = hbi0.queryHallById(session.getHid());
@@ -1280,7 +1376,12 @@ public class Menu {
         }
         return row;
     }
-
+    /**
+     * @author Felix
+     * @date 2020/7/3 17:55
+     * @describe 获取一个存在的放映厅id
+     * @return int
+     */
     private int isHallIdExistAndGet() {
         int hid;
         while (true) {
@@ -1299,7 +1400,12 @@ public class Menu {
         }
         return hid;
     }
-
+    /**
+     * @author Felix
+     * @date 2020/7/3 17:56
+     * @describe 获取一个存在的场次id
+     * @return int
+    */
     private int isSessionIdExistAndGet() {
         int sid;
         while (true) {
@@ -1311,14 +1417,19 @@ public class Menu {
                 sidList.add(session.getId());
             }
             if (!sidList.contains(sid)) {
-                System.out.println("无此放映厅id，请重新输入");
+                System.out.println("无此场次id，请重新输入");
             } else {
                 break;
             }
         }
         return sid;
     }
-
+    /**
+     * @author Felix
+     * @date 2020/7/3 17:56
+     * @describe 通过电影id，获取一个对应存在的场次id
+     * @return int
+    */
     private int isSessionIdExistAndGet(int mid) {
         int sid;
         while (true) {
@@ -1338,7 +1449,12 @@ public class Menu {
         }
         return sid;
     }
-
+    /**
+     * @author Felix
+     * @date 2020/7/3 17:57
+     * @describe 获取一个存在的电影id
+     * @return int
+    */
     private int isMovieIdExistAndGet() {
         int mid;
         while (true) {
@@ -1357,9 +1473,15 @@ public class Menu {
         }
         return mid;
     }
-
+    /**
+     * @author Felix
+     * @date 2020/7/3 17:57
+     * @describe 将对应场次的剩余空座以一个二维平面图的输出结果展示
+     * @return void
+    */
     private void sessionShow(int sid) {
         int row = 0, column = 0;
+        //确定对应场次的容量大小
         String capacity = qscdi0.querySessionByIdWithCapacity(sid).getCapacity();
         switch (capacity) {
             case "S":
@@ -1377,8 +1499,10 @@ public class Menu {
             default:
                 break;
         }
+        //生成对应容量大小的二位数组
         boolean[][] seats = new boolean[row][column];
         ArrayList<Ticket> rs = tdi0.queryTicketAllBySid(sid);
+        //将已被订票的座位进行填充
         if (rs != null) {
             for (Ticket r : rs) {
                 int rowed = r.getRow();
@@ -1386,7 +1510,7 @@ public class Menu {
                 seats[rowed - 1][columned - 1] = true;
             }
         }
-
+        //输出所有座位状态
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < column; j++) {
                 if (seats[i][j]) {
@@ -1407,7 +1531,12 @@ public class Menu {
         return rs;
     }
 
-
+    /**
+     * @author Felix
+     * @date 2020/7/3 18:04
+     * @describe 充值流程：需要输入密码、验证码
+     * @return void
+    */
     private void recharge(int uid) {
         do {
             System.out.println("输入您要充值的金额");
@@ -1423,7 +1552,9 @@ public class Menu {
             while (flag < 100) {
                 System.out.println("请输入验证码");
                 StringBuilder test = new StringBuilder();
+                //生成26个字母的字符串组
                 String[] strings = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+                //随机抽取4个
                 for (int i = 0; i < 4; i++) {
                     test.append(strings[random.nextInt(26)]);
                 }
@@ -1440,9 +1571,15 @@ public class Menu {
             ubi0.recharger(uid, amount);
         } while (MyUtil.isGoOn("是否继续充值(y/n)", "n"));
     }
-
+    /**
+     * @author Felix
+     * @date 2020/7/3 18:05
+     * @describe 向用户推荐电影
+     * @return void
+    */
     private void recommend(int uid) {
         ArrayList<Movie> recommend = new ArrayList<>();
+        //若有收藏，优先推荐收藏电影
         ArrayList<Collection> collections = collectionBizImp0.queryCollectionByUid(uid);
         if (collections != null) {
             for (Collection c : collections) {
@@ -1450,6 +1587,7 @@ public class Menu {
             }
         }
         ArrayList<Ticket> tickets = tbi0.queryTicketByUid(uid);
+        //若购过票，根据所购票的type和labels来推荐电影
         if (tickets != null) {
             for (Ticket t : tickets) {
                 int sid = t.getSid();
@@ -1474,8 +1612,9 @@ public class Menu {
                         }
                     }
                 }
-                if (recommend.size() > 10) break;
+                if (recommend.size() > 5) break;
             }
+            //不足5个随机填充至5个
             while (recommend.size() < 5) {
                 ArrayList<Movie> movieAll = mbi0.queryMovieAll();
                 Movie movie = movieAll.get(random.nextInt(movieAll.size()));
@@ -1483,7 +1622,9 @@ public class Menu {
                     recommend.add(movie);
                 }
             }
-        } else {
+        }
+        //若都无记录，则随机推荐5个电影
+        else {
             while (recommend.size() < 5) {
                 ArrayList<Movie> movieAll = mbi0.queryMovieAll();
                 Movie movie = movieAll.get(random.nextInt(movieAll.size()));

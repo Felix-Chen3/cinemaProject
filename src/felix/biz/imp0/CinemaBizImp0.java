@@ -54,8 +54,7 @@ public class CinemaBizImp0 implements CinemaBiz {
 
     @Override
     public Cinema queryCinemaById(int id) {
-
-        return null;
+        return cdi0.queryOne(Cinema.class, "select id,name,address from cinema where id = ?", id);
     }
 
     @Override
