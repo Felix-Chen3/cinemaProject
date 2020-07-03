@@ -17,7 +17,6 @@ import java.util.ArrayList;
 public class SessionBizImp0 implements SessionBiz {
     private SessionDaoImp0 sdi0 = new SessionDaoImp0();
     private MovieDaoImp0 mdi0 = new MovieDaoImp0();
-    private MovieBizImp0 mbi0 = new MovieBizImp0();
     /**
      * @author Felix
      * @date 2020-06-29 17:15
@@ -27,22 +26,22 @@ public class SessionBizImp0 implements SessionBiz {
     */
     @Override
     public boolean create(Session session) {
-        ArrayList<Session> rs = querySessionByHidAndMid(session);
+        ArrayList<Session> rs = querySessionByHid(session);
         if (rs.size() == 0) {
             return sdi0.createSession(session);
         }
-        for (int i = 0; i < rs.size(); i++) {
-            LocalDateTime start = rs.get(i).getTime();
-            int length = Integer.valueOf(mdi0.queryById(rs.get(i).getMid()).getDuration());
+        for (Session r : rs) {
+            LocalDateTime start = r.getTime();
+            int length = Integer.parseInt(mdi0.queryById(r.getMid()).getDuration());
             LocalDateTime end = start.plusMinutes(length);
-            LocalDateTime thisStart = rs.get(i).getTime();
-            int thisLength = Integer.valueOf(mdi0.queryById(session.getMid()).getDuration());
+            LocalDateTime thisStart = session.getTime();
+            int thisLength = Integer.parseInt(mdi0.queryById(session.getMid()).getDuration());
             LocalDateTime thisEnd = thisStart.plusMinutes(thisLength);
-            if ((thisEnd.compareTo(start) == -1) || (thisStart.compareTo(end) == 1)) {
-                return sdi0.createSession(session);
+            if (((thisEnd.compareTo(end)>0) && (end.compareTo(thisStart)>0)) || (thisEnd.compareTo(start)>0 && start.compareTo(thisStart)>0)){
+                return false;
             }
         }
-        return false;
+        return sdi0.createSession(session);
     }
 
     private ArrayList<Session> querySessionByHidAndMid(Session session) {

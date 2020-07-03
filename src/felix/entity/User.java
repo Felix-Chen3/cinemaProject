@@ -16,6 +16,10 @@ public class User {
     private double totalAmount;
     private String level;
 
+    public void showBalance() {
+        System.out.println("您当前的余额为:" + this.balance);
+    }
+
     public User() {
     }
 

@@ -8,4 +8,6 @@ public interface TicketBiz {
     ArrayList<Ticket> queryTicketBySidAndSeat(Ticket ticket);
 
     boolean create(Ticket ticket);
+
+    ArrayList<Ticket> queryTicketByUid(int uid);
 }

@@ -13,10 +13,12 @@ import org.apache.commons.lang.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 public class MyUtil {
     private static Scanner scanner = new Scanner(System.in);
+    private static Random random = new Random();
     private static MovieDaoImp0 mdi0 = new MovieDaoImp0();
     /**
      * @author Felix
@@ -127,15 +129,27 @@ public class MyUtil {
     }
 
     /**
-     * @author Felix
-     * @date 2020-06-30 16:30
-     * @describe id是否在对应泛型列表中
      * @return
      * @throws
-    */
-
-
-//    public static int getDurationBySessionId(int id) {
-//        Integer.valueOf(mdi0.queryById(rs.get(i).getMid()).getDuration())
-//    }
+     * @author Felix
+     * @date 2020-07-02 10:21
+     * @describe 获取验证码并返回是否输入正确的结果
+     */
+    public static boolean getCaptcha() {
+        while (true) {
+            System.out.println("请输入验证码");
+            String test = "";
+            String[] strings = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+            for (int i = 0; i < 4; i++) {
+                test = test + strings[random.nextInt(26)];
+            }
+            System.out.println(test);
+            String userText = scanner.next();
+            if (!userText.equals(test)) {
+                System.out.println("验证码有误");
+            } else {
+                return true;
+            }
+        }
+    }
 }

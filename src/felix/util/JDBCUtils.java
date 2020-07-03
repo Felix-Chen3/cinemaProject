@@ -22,7 +22,7 @@ public class JDBCUtils {
      * @date 2020-06-24 01:38
      * @params * @param
      * @return java.sql.Connection
-     * @throws IOException, ClassNotFoundException, SQLException
+     * @throws *IOException, ClassNotFoundException, SQLException
      */
     public static Connection getConnection() throws IOException, ClassNotFoundException, SQLException {
         InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream("jdbc.properties");

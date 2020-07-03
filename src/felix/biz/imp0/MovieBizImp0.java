@@ -56,6 +56,11 @@ public class MovieBizImp0 implements MovieBiz {
     }
 
     @Override
+    public Movie queryMovieById(int mid) {
+        return mdi0.queryOne(Movie.class,"select id,name,type,director,protagonist,duration,detail,score,labels,isReleased from movie where id = ?",mid);
+    }
+
+    @Override
     public int updateName(int id, String changeString) {
         return  mdi0.update("update movie set name = ? where id  = ?",changeString,id);
     }

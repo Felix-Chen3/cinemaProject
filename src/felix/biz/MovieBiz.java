@@ -19,6 +19,8 @@ public interface MovieBiz {
 
     ArrayList<Movie> queryMovieAll();
 
+    Movie queryMovieById(int uid);
+
     int updateName(int id, String changeString);
 
     int updateType(int id, String changeString);

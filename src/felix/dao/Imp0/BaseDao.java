@@ -152,7 +152,6 @@ public class BaseDao {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
-
             JDBCUtils.closeResource(conn, ps);
         }
         return 0;

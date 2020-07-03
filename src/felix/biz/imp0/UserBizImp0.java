@@ -9,7 +9,6 @@ import felix.biz.UserBiz;
 import felix.dao.Imp0.MovieDaoImp0;
 import felix.dao.Imp0.SessionDaoImp0;
 import felix.dao.Imp0.UserDaoImp0;
-import felix.entity.Movie;
 import felix.entity.Session;
 import felix.entity.User;
 
@@ -132,6 +131,11 @@ public class UserBizImp0 implements UserBiz {
         double price = session.getPrice();
         double cost = price*discount;
         sdi0.update("update user set balance = ? where id = ?", balance - cost,uid);
+    }
+
+    @Override
+    public void updatePassword(int uid,String password) {
+        udi0.update("update user set password = ? where id = ?", password, uid);
     }
 }
 

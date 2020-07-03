@@ -89,9 +89,9 @@ public class Print {
         System.out.println("日");
         int dayOfMonth = getPositiveInt();
         System.out.println("小时");
-        int hour = getPositiveInt();
+        int hour = getInt();
         System.out.println("分钟");
-        int minute = getPositiveInt();
+        int minute = getInt();
         System.out.println("秒");
         int second = getInt();
         return LocalDateTime.of(year, month, dayOfMonth, hour, minute, second);

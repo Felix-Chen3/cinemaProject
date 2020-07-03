@@ -6,5 +6,5 @@
 package felix.biz;
 
 public interface AdminBiz {
-    public boolean login(String account, String password);
+    boolean login(String account, String password);
 }

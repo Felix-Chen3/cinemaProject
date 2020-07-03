@@ -18,4 +18,6 @@ public interface UserBiz {
     boolean checkEnoughBalance(int uid, int sid, int num);
 
     void deductBalance(int uid, int sid);
+
+    void updatePassword(int uid,String password);
 }
