@@ -41,8 +41,8 @@ public class Cinema {
     public String toString() {
         return "Cinema{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
+                ", 名称='" + name + '\'' +
+                ", 地址='" + address + '\'' +
                 '}';
     }
 

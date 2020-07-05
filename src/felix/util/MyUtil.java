@@ -63,21 +63,6 @@ public class MyUtil {
         } else {
             System.out.println("----------" + msg + "----------");
             for (T t : al) {
-//                if (t instanceof Cinema) {
-//                    Cinema c = (Cinema) t;
-//                    if (c.getId() > 0) {
-//                        System.out.println(t);
-//                    }
-//                }if (t instanceof Movie) {
-//                    Movie c = (Movie) t;
-//                    if (c.getId() > 0) {
-//                        System.out.println(t);
-//                    }
-//                }if (t instanceof Hall) {
-//                    Hall c = (Hall) t;
-//                    if (c.getId() > 0) {
-//                        System.out.println(t);
-//                    }
                 System.out.println(t);
                 }
             }

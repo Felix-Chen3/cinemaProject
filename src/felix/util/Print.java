@@ -112,7 +112,7 @@ public class Print {
                     throw new Exception();
                 }
             } catch (Exception e) {
-                System.out.println("输入的数不能为复数,请再次输入");
+                System.out.println("输入的数不能为负数,请再次输入");
                 scanner.nextLine();
                 continue;
             }

@@ -16,14 +16,14 @@ public class SessionDaoImp0 extends BaseDao implements SessionDao {
 
     @Override
     public ArrayList<Session> fuzzyQueryByHidAll(Session session) {
-        String sql = "select id,hid,mid,time,price from session where hid like ?";
-        return queryAll(Session.class, sql, "%" + session.getHid() + "%");
+        String sql = "select id,hid,mid,time,price from session where hid = ?";
+        return queryAll(Session.class, sql,session.getHid());
     }
 
     @Override
     public ArrayList<Session> fuzzyQueryByMidAll(Session session) {
-        String sql = "select id,hid,mid,time,price from session where mid like ?";
-        return queryAll(Session.class, sql, "%" + session.getMid() + "%");
+        String sql = "select id,hid,mid,time,price from session where mid = ?";
+        return queryAll(Session.class, sql,session.getMid());
     }
 
     @Override

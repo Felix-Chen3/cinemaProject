@@ -154,16 +154,16 @@ public class Movie {
 
     @Override
     public String toString() {
-        return "Movie{" +
+        return "电影{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", director='" + director + '\'' +
-                ", protagonist=" + protagonist +
-                ", duration='" + duration + '\'' +
-                ", detail='" + detail + '\'' +
-                ", score=" + score +
-                ", labels=" + labels +
+                ", 片名='" + name + '\'' +
+                ", 类型='" + type + '\'' +
+                ", 导演='" + director + '\'' +
+                ", 主演=" + protagonist +
+                ", 时长='" + duration + '\'' +
+                ", 简介='" + detail + '\'' +
+                ", 评分=" + score +
+                ", 标签=" + labels +
                 '}';
     }
 

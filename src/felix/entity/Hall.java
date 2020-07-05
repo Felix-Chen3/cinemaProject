@@ -72,11 +72,11 @@ public class Hall {
 
     @Override
     public String toString() {
-        return "Hall{" +
+        return "放映厅{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", cid=" + cid +
-                ", capacity='" + capacity + '\'' +
+                ", 名称='" + name + '\'' +
+                ", 电影id=" + cid +
+                ", 容量='" + capacity + '\'' +
                 '}';
     }
 }
