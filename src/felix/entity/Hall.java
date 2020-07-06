@@ -74,9 +74,9 @@ public class Hall {
     public String toString() {
         return "放映厅{" +
                 "id=" + id +
-                ", 名称='" + name + '\'' +
-                ", 电影id=" + cid +
-                ", 容量='" + capacity + '\'' +
+                ", 名称(name)='" + name + '\'' +
+                ", 影院id(cid)=" + cid +
+                ", 容量(capacity)='" + capacity + '\'' +
                 '}';
     }
 }

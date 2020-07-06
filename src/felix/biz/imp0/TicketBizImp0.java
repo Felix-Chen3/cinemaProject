@@ -16,7 +16,18 @@ public class TicketBizImp0 implements TicketBiz {
 
     @Override
     public ArrayList<Ticket> queryTicketBySidAndSeat(Ticket ticket) {
-        return tdi0.queryAll(Ticket.class, "select id,sid,row_java,column_java from ticket where sid = ? and row_java = ? and column_java = ?", ticket.getSid(),ticket.getRow(), ticket.getColumn());
+        return tdi0.queryAll(Ticket.class, "SELECT\n" +
+                "\tticket.id, \n" +
+                "\tticket.uid, \n" +
+                "\tticket.sid, \n" +
+                "\tticket.row_java AS `row`, \n" +
+                "\tticket.column_java AS `column`\n" +
+                "FROM\n" +
+                "\tticket\n" +
+                "WHERE\n" +
+                "\tticket.sid = ? AND\n" +
+                "\tticket.row_java = ? AND\n" +
+                "\tticket.column_java = ?", ticket.getSid(),ticket.getRow(), ticket.getColumn());
     }
 
     public boolean create(Ticket ticket) {
@@ -33,7 +44,16 @@ public class TicketBizImp0 implements TicketBiz {
 
     @Override
     public ArrayList<Ticket> queryTicketByUid(int uid) {
-        return tdi0.queryAll(Ticket.class, "select id,uid,sid from ticket where uid =?", uid);
+        return tdi0.queryAll(Ticket.class, "SELECT\n" +
+                "\tticket.id, \n" +
+                "\tticket.uid, \n" +
+                "\tticket.sid, \n" +
+                "\tticket.row_java AS `row`, \n" +
+                "\tticket.column_java AS `column`\n" +
+                "FROM\n" +
+                "\tticket\n" +
+                "WHERE\n" +
+                "\tticket.uid = ?",uid);
     }
 
     @Override

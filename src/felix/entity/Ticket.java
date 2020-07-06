@@ -5,6 +5,8 @@
  */
 package felix.entity;
 
+import java.util.Objects;
+
 public class Ticket {
     private int id;
     private int uid;
@@ -13,6 +15,21 @@ public class Ticket {
     private int column;
 
     public Ticket() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ticket ticket = (Ticket) o;
+        return sid == ticket.sid &&
+                row == ticket.row &&
+                column == ticket.column;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sid, row, column);
     }
 
     public Ticket(int uid, int sid, int row, int column) {

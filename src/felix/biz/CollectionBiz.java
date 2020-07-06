@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public interface CollectionBiz {
     boolean create(Collection collection);
 
-    ArrayList<Collection> queryCollectionAll(Collection collection);
+    ArrayList<Collection> queryCollectionAll();
 
     ArrayList<Collection> queryCollectionByUid(int uid);
 }

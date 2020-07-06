@@ -107,7 +107,7 @@ public class MovieBizImp0 implements MovieBiz {
 
     @Override
     public int deleteMovie(int id) {
-        return  mdi0.update("delete from movie where id =?",id);
+        return  mdi0.update("update movie set isReleased = 0 where id =?",id);
     }
 
 }

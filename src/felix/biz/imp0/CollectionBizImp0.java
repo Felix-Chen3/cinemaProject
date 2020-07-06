@@ -12,15 +12,18 @@ import felix.entity.Collection;
 import java.util.ArrayList;
 
 public class CollectionBizImp0 implements CollectionBiz {
-    private CollectionDaoImp0 collectionDaoImp0 = new CollectionDaoImp0();
+    private final CollectionDaoImp0 collectionDaoImp0 = new CollectionDaoImp0();
 
     @Override
     public boolean create(Collection collection) {
-        return collectionDaoImp0.create(collection);
+        ArrayList<Collection> list = queryCollectionAll();
+        if (list.contains(collection)) {
+            return false;
+        }else return collectionDaoImp0.create(collection);
     }
 
     @Override
-    public ArrayList<Collection> queryCollectionAll(Collection collection) {
+    public ArrayList<Collection> queryCollectionAll() {
         return collectionDaoImp0.queryAll(Collection.class,"select id,uid,mid from collection");
     }
 

@@ -156,14 +156,14 @@ public class Movie {
     public String toString() {
         return "电影{" +
                 "id=" + id +
-                ", 片名='" + name + '\'' +
-                ", 类型='" + type + '\'' +
-                ", 导演='" + director + '\'' +
-                ", 主演=" + protagonist +
-                ", 时长='" + duration + '\'' +
-                ", 简介='" + detail + '\'' +
-                ", 评分=" + score +
-                ", 标签=" + labels +
+                ", 片名(name)='" + name + '\'' +
+                ", 类型(type)='" + type + '\'' +
+                ", 导演(director)='" + director + '\'' +
+                ", 主演(protagonist)=" + protagonist +
+                ", 时长(duration)='" + duration + '\'' +
+                ", 简介(detail)='" + detail + '\'' +
+                ", 评分(score)=" + score +
+                ", 标签(labels)=" + labels +
                 '}';
     }
 

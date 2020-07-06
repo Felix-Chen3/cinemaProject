@@ -8,6 +8,7 @@ import felix.util.MyUtil;
 import felix.util.Print;
 import org.junit.Test;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -29,6 +30,7 @@ public class Menu {
     private final QuerySessionCapacityDaoImp0 qscdi0 = new QuerySessionCapacityDaoImp0();
     private final RechargerBizImp0 rbi0 = new RechargerBizImp0();
     private final CollectionBizImp0 collectionBizImp0 = new CollectionBizImp0();
+    private final DecimalFormat df = new DecimalFormat("0.00");
 
     @Test
     public void mainMenu() {
@@ -111,56 +113,6 @@ public class Menu {
                     }
             }
         }
-    }
-
-    @Test
-    public void earningView() {
-        do {
-            System.out.println("==========查看收益==========");
-            System.out.println("1.根据电影票房查看");
-            System.out.println("2.根据影院地址查看");
-            System.out.println("0.返回上一级");
-            choice = scanner.next();
-            switch (choice) {
-                case "1":
-                    earningViewByMovie();
-                    break;
-                case "2":
-                    earningViewByCinema();
-                    break;
-                default:
-                    break;
-            }
-        } while (MyUtil.isGoOn("是否返回上一级(y/n)", "y"));
-    }
-
-    private void earningViewByCinema() {
-        ArrayList<Ticket> tickets = tbi0.queryTicketAll();
-        MyHashMap map = new MyHashMap();
-        for (Ticket t : tickets) {
-            int sid = t.getSid();
-            Session session = sbi0.querySessionById(sid);
-            double price = session.getPrice();
-            int hid = session.getHid();
-            Hall hall = hbi0.queryHallById(hid);
-            int cid = hall.getCid();
-            map.put(cid, price);
-        }
-        List<Map.Entry<Integer, Double>> list = new ArrayList<>(map.entrySet());
-        Collections.sort(list, new Comparator<Map.Entry<Integer, Double>>() {
-            @Override
-            public int compare(Map.Entry<Integer, Double> o1, Map.Entry<Integer, Double> o2) {
-                return o2.getValue().compareTo(o1.getValue());
-            }
-        });
-        System.out.println("==========影院盈利排行榜==========");
-        for (Map.Entry<Integer, Double> e : list) {
-            String cinemaName = cbi0.queryCinemaById(e.getKey()).getName();
-            String cinemaAddress = cbi0.queryCinemaById(e.getKey()).getAddress();
-            System.out.println("影院id:" + e.getKey() + "\t影院名称:" + cinemaName + "\t影院地址:" + cinemaAddress + "\t影院总票房" + e.getValue());
-        }
-        System.out.println("=================================");
-
     }
 
 
@@ -254,7 +206,7 @@ public class Menu {
             Cinema cinema = new Cinema(name, null);
             ArrayList<Cinema> rs = cbi0.queryCinemaByName(cinema);
             MyUtil.showInfo(rs, "影院结果");
-        } while (MyUtil.isGoOn("是否继续查询(y/n)", ""));
+        } while (MyUtil.isGoOn("是否继续查询(y/n)", "n"));
     }
 
     @Test
@@ -307,7 +259,6 @@ public class Menu {
 
     @Test
     public void deleteCinema() {
-        boolean flag = true;
         do {
             System.out.println("==========删除影院==========");
             ArrayList<Cinema> rs = cbi0.queryCinemaAll();
@@ -319,11 +270,12 @@ public class Menu {
                 for (Session sr : srs) {
                     if (SessionCanNotDelete(sr.getId())) {
                         System.out.println("删除影院存在场次有票已被售出且未放映，该影院不能删除");
-                        flag = false;
+                        return;
                     }
                 }
             }
-            if (flag) cbi0.deleteCinema(cid);
+            cbi0.deleteCinema(cid);
+            System.out.println("删除成功");
         } while (MyUtil.isGoOn("是否返回上层界面(y/n)", "y"));
     }
 
@@ -357,10 +309,10 @@ public class Menu {
         int flag = 0;
         while (flag < 100) {
             System.out.println("==========影片管理==========");
-            System.out.println("1.上架影片");
+            System.out.println("1.添加影片");
             System.out.println("2.查询影片");
             System.out.println("3.更改影片信息");
-            System.out.println("4.删除影片");
+            System.out.println("4.下架影片");
             System.out.println("0.返回上级界面");
             choice = scanner.next();
             switch (choice) {
@@ -598,17 +550,14 @@ public class Menu {
     @Test
     public void deleteMovie() {
         do {
-            System.out.println("==========删除影片==========");
-            ArrayList<Movie> rs = mbi0.queryMovieAll();
-            MyUtil.showInfo(rs, "影片列表");
-            System.out.println("请输入删除影片id");
-            int id = Print.getPositiveInt();
+            System.out.println("==========下架影片==========");
+            int id = isMovieIdExistAndGet();
             int tmp = mbi0.deleteMovie(id);
             boolean updateResult = false;
             if (tmp > 0) {
                 updateResult = true;
             }
-            MyUtil.showIsOk(updateResult, "删除成功", "删除失败");
+            MyUtil.showIsOk(updateResult, "下架成功", "下架失败");
         } while (MyUtil.isGoOn("是否返回上层界面(y/n)", "y"));
     }
 
@@ -650,8 +599,8 @@ public class Menu {
         do {
             System.out.println("放映厅名称:");
             String name = scanner.next();
-            System.out.println("所属影院id");
-            int cid = Print.getPositiveInt();
+            MyUtil.showInfo(cbi0.queryCinemaAll(), "影院列表");
+            int cid = isCinemaIdExistAndGet();
             String capacity;
             // 放映厅大小只能在给定的3个选项中选
             while (true) {
@@ -744,8 +693,7 @@ public class Menu {
             System.out.println("==========放映厅信息更改==========");
             ArrayList<Hall> rs = hbi0.queryHallAll();
             MyUtil.showInfo(rs, "放映厅列表");
-            System.out.println("请输入要更改放映厅id");
-            int id = Print.getPositiveInt();
+            int id = isHallIdExistAndGet();
             do {
                 System.out.println("请输入要更改的字段");
                 String field = scanner.next();
@@ -793,18 +741,11 @@ public class Menu {
             for (Session hr : hrs) {
                 if (SessionCanNotDelete(hr.getId())) {
                     System.out.println("删除放映厅存在场次有票已被售出且未放映，该放映厅不能删除");
-                    if (!MyUtil.isGoOn("是否返回上层界面(y/n)", "y")) {
-                        return;
-                    }
+                    return;
                 }
             }
-            int id = Print.getPositiveInt();
-            int tmp = hbi0.deleteHall(id);
-            boolean updateResult = false;
-            if (tmp > 0) {
-                updateResult = true;
-            }
-            MyUtil.showIsOk(updateResult, "删除成功", "删除失败");
+            hbi0.deleteHall(hid);
+            System.out.println("删除成功");
         } while (MyUtil.isGoOn("是否返回上层界面(y/n)", "y"));
     }
 
@@ -1031,12 +972,69 @@ public class Menu {
             return now.compareTo(end) <= 0;
         } else return false;
     }
+
+    @Test
+    public void earningView() {
+        do {
+            System.out.println("==========查看收益==========");
+            System.out.println("1.根据电影票房查看");
+            System.out.println("2.根据影院地址查看");
+            System.out.println("0.返回上一级");
+            choice = scanner.next();
+            switch (choice) {
+                case "1":
+                    earningViewByMovie();
+                    break;
+                case "2":
+                    earningViewByCinema();
+                    break;
+                default:
+                    break;
+            }
+        } while (MyUtil.isGoOn("是否返回上一级(y/n)", "y"));
+    }
+
     /**
+     * @return void
+     * @author Felix
+     * @date 2020/7/6 16:11
+     * @describe 根据影院票房降序排列
+     */
+    private void earningViewByCinema() {
+        ArrayList<Ticket> tickets = tbi0.queryTicketAll();
+        MyHashMap map = new MyHashMap();
+        for (Ticket t : tickets) {
+            int sid = t.getSid();
+            Session session = sbi0.querySessionById(sid);
+            double price = session.getPrice();
+            int hid = session.getHid();
+            Hall hall = hbi0.queryHallById(hid);
+            int cid = hall.getCid();
+            map.put(cid, price);
+        }
+        List<Map.Entry<Integer, Double>> list = new ArrayList<>(map.entrySet());
+        list.sort(new Comparator<Map.Entry<Integer, Double>>() {
+            @Override
+            public int compare(Map.Entry<Integer, Double> o1, Map.Entry<Integer, Double> o2) {
+                return o2.getValue().compareTo(o1.getValue());
+            }
+        });
+        System.out.println("==========影院盈利排行榜==========");
+        for (Map.Entry<Integer, Double> e : list) {
+            String cinemaName = cbi0.queryCinemaById(e.getKey()).getName();
+            String cinemaAddress = cbi0.queryCinemaById(e.getKey()).getAddress();
+            System.out.println("影院id:" + e.getKey() + "\t影院名称:" + cinemaName + "\t影院地址:" + cinemaAddress + "\t影院总票房" + df.format(e.getValue()));
+        }
+        System.out.println("=================================");
+
+    }
+
+    /**
+     * @return void
      * @author Felix
      * @date 2020/7/5 0:25
      * @describe 根据电影票房降序排列
-     * @return void
-    */
+     */
     @Test
     public void earningViewByMovie() {
         ArrayList<Ticket> tickets = tbi0.queryTicketAll();
@@ -1049,11 +1047,11 @@ public class Menu {
             map.put(mid, price);
         }
         List<Map.Entry<Integer, Double>> list = new ArrayList<>(map.entrySet());
-        Collections.sort(list, (o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+        list.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
         System.out.println("==========票房排行榜==========");
         for (Map.Entry<Integer, Double> e : list) {
             String movieName = mbi0.queryMovieById(e.getKey()).getName();
-            System.out.println("电影id:" + e.getKey() + "\t电影名称:" + movieName + "\t电影票房" + e.getValue());
+            System.out.println("电影id:" + e.getKey() + "\t电影名称:" + movieName + "\t电影票房" + df.format(e.getValue()));
         }
         System.out.println("==============================");
     }
@@ -1124,8 +1122,9 @@ public class Menu {
             System.out.println("1.浏览电影");
             System.out.println("2.我的收藏");
             System.out.println("3.购票");
-            System.out.println("4.我的账号");
-            System.out.println("5.热映推荐");
+            System.out.println("4.我的影票");
+            System.out.println("5.我的账号");
+            System.out.println("6.热映推荐");
             System.out.println("0.退出登录");
             choice = scanner.next();
             switch (choice) {
@@ -1139,9 +1138,12 @@ public class Menu {
                     ticketPurchaseByMovie(uid);
                     break;
                 case "4":
-                    userAccount(uid);
+                    checkTicket(uid);
                     break;
                 case "5":
+                    userAccount(uid);
+                    break;
+                case "6":
                     recommend(uid);
                     break;
                 default:
@@ -1198,7 +1200,7 @@ public class Menu {
             System.out.println("想要收藏的电影id");
             int mid = isMovieIdExistAndGet();
             Collection collection = new Collection(uid, mid);
-            MyUtil.showIsOk(collectionBizImp0.create(collection), "添加成功", "添加失败");
+            MyUtil.showIsOk(collectionBizImp0.create(collection), "添加成功", "添加失败,该片已被收藏");
         } while (MyUtil.isGoOn("是否继续添加收藏(y/n)", "n"));
     }
 
@@ -1312,7 +1314,9 @@ public class Menu {
 
             int mid = isMovieIdExistAndGet();
             int sid = isSessionIdExistAndGet(mid);
-
+            if (sid == 0) {
+                continue;
+            }
             System.out.println("输入想要购买的数量");
             int num = Print.getPositiveInt();
             while (!ubi0.checkEnoughBalance(uid, sid, num)) {
@@ -1465,6 +1469,10 @@ public class Menu {
         int sid;
         while (true) {
             ArrayList<QuerySession> sessionList = dsdi0.show(mid);
+            if (sessionList.size() == 0) {
+                System.out.println("该电影暂无排场，请选择其他电影观看");
+                return 0;
+            }
             MyUtil.showInfo(sessionList, "场次列表");
             System.out.println("输入想要购买的场次id");
             sid = Print.getPositiveInt();
@@ -1670,6 +1678,54 @@ public class Menu {
             }
             MyUtil.showInfo(recommend, "热映推荐");
         } while (MyUtil.isGoOn("是否重新推荐(y/n)", "n"));
+    }
+
+    public void checkTicket(int uid) {
+        do {
+            ArrayList<Ticket> tickets = tbi0.queryTicketByUid(uid);
+            if (tickets.size() == 0) {
+                System.out.println("无购票记录");
+                return;
+            }
+            boolean isEmpty1 = false;
+            boolean isEmpty2 = false;
+            System.out.println("===============未使用影票===============");
+            for (Ticket t : tickets) {
+                int sid = t.getSid();
+                Session session = sbi0.querySessionById(sid);
+                String movieName = mbi0.queryMovieById(session.getMid()).getName();
+                LocalDateTime time = session.getTime();
+                String hallName = hbi0.queryHallById(session.getHid()).getName();
+                int row = t.getRow();
+                int column = t.getColumn();
+                if (time.compareTo(LocalDateTime.now()) >= 0) {
+                    System.out.println("电影:" + movieName + "\t\t放映时间:" + time + "\t\t放映厅名称:" + hallName + "\t\t" + row + "排" + column + "座");
+                    isEmpty1 = true;
+                }
+            }
+            if (!isEmpty1) {
+                System.out.println("无相关数据");
+            }
+            System.out.println("----------------------------------------");
+            System.out.println("===============已过期影票================");
+            for (Ticket t : tickets) {
+                int sid = t.getSid();
+                Session session = sbi0.querySessionById(sid);
+                String movieName = mbi0.queryMovieById(session.getMid()).getName();
+                LocalDateTime time = session.getTime();
+                String hallName = hbi0.queryHallById(session.getHid()).getName();
+                int row = t.getRow();
+                int column = t.getColumn();
+                if (time.compareTo(LocalDateTime.now()) < 0) {
+                    System.out.println("电影:" + movieName + "\t\t放映时间:" + time + "\t\t放映厅名称:" + hallName + "\t\t" + row + "排" + column + "座");
+                    isEmpty2 = true;
+                }
+            }
+            if (!isEmpty2) {
+                System.out.println("无相关数据");
+            }
+            System.out.println("----------------------------------------");
+        } while (MyUtil.isGoOn("是否返回上级界面(y/n)", "y"));
     }
 
 }

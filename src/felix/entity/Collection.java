@@ -10,10 +10,26 @@ Collection	收藏	收藏ID	用户ID	电影ID
 */
 
 
+import java.util.Objects;
+
 public class Collection {
     private int id;
     private int uid;
     private int mid;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Collection that = (Collection) o;
+        return uid == that.uid &&
+                mid == that.mid;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uid, mid);
+    }
 
     public int getId() {
         return id;
