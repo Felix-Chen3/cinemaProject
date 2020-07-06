@@ -1,20 +1,13 @@
-/**
- * @author Felix
- * @describe
- * @date 2020/6/26 22:54
- */
 package felix.util;
 
-import java.sql.SQLOutput;
+
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class Print {
-    private static Scanner scanner = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in);
 
     /**
-     * @return
-     * @throws
      * @author Felix
      * @date 2020-06-27 00:17
      * @describe 重复获取字符直到得到一个正整数
@@ -37,8 +30,6 @@ public class Print {
     }
 
     /**
-     * @return
-     * @throws
      * @author Felix
      * @date 2020-06-27 00:32
      * @describe 重复获取字符直到得到一个正数
@@ -61,8 +52,6 @@ public class Print {
     }
 
     /**
-     * @return
-     * @throws
      * @author Felix
      * @date 2020-06-28 16:23
      * @describe 重复获取字符直到得到一个布尔值
@@ -100,8 +89,6 @@ public class Print {
      * @author Felix
      * @date 2020-06-28 16:55
      * @describe 得到一个非负整数
-     * @return
-     * @throws
     */
     public static int getInt() {
         int rs;

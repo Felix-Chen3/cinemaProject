@@ -9,7 +9,6 @@ package felix.biz.imp0;
 import felix.biz.CinemaBiz;
 import felix.dao.Imp0.CinemaDaoImp0;
 import felix.entity.Cinema;
-
 import java.util.ArrayList;
 import java.util.Random;
 

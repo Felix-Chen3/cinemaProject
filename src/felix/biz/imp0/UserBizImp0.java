@@ -83,19 +83,21 @@ public class UserBizImp0 implements UserBiz {
         double balance = thisUser.getBalance();
         String level = thisUser.getLevel();
         double discount = 1;
-        switch (level) {
-            case "Vip1":
-                discount = 0.9;
-                break;
-            case "Vip2":
-                discount = 0.8;
-                break;
-            case "Vip3":
-                discount = 0.7;
-                break;
-            case "sVip":
-                discount = 0.5;
-                break;
+        if (level!=null) {
+            switch (level) {
+                case "Vip1":
+                    discount = 0.9;
+                    break;
+                case "Vip2":
+                    discount = 0.8;
+                    break;
+                case "Vip3":
+                    discount = 0.7;
+                    break;
+                case "sVip":
+                    discount = 0.5;
+                    break;
+            }
         }
         Session session = sdi0.queryOne(Session.class, "select price from Session where id = ?", sid);
         double price = session.getPrice();
@@ -109,19 +111,21 @@ public class UserBizImp0 implements UserBiz {
         double balance = thisUser.getBalance();
         String level = thisUser.getLevel();
         double discount = 1;
-        switch (level) {
-            case "Vip1":
-                discount = 0.9;
-                break;
-            case "Vip2":
-                discount = 0.8;
-                break;
-            case "Vip3":
-                discount = 0.7;
-                break;
-            case "sVip":
-                discount = 0.5;
-                break;
+        if (level!=null) {
+            switch (level) {
+                case "Vip1":
+                    discount = 0.9;
+                    break;
+                case "Vip2":
+                    discount = 0.8;
+                    break;
+                case "Vip3":
+                    discount = 0.7;
+                    break;
+                case "sVip":
+                    discount = 0.5;
+                    break;
+            }
         }
         Session session = sdi0.queryOne(Session.class, "select price from Session where id = ?", sid);
         double price = session.getPrice();

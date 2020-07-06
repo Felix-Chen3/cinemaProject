@@ -17,9 +17,9 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class MyUtil {
-    private static Scanner scanner = new Scanner(System.in);
-    private static Random random = new Random();
-    private static MovieDaoImp0 mdi0 = new MovieDaoImp0();
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final Random random = new Random();
+    private static final MovieDaoImp0 mdi0 = new MovieDaoImp0();
     /**
      * @author Felix
      * @date 2020-06-24 15:22
@@ -30,17 +30,13 @@ public class MyUtil {
     public static boolean isGoOn(String msg, String outChoice) {
         System.out.println(msg);
         String c = scanner.next();
-        if (c.equals(outChoice)) {
-            return false;
-        }
-        return true;
+        return !c.equals(outChoice);
     }
     /**
      * @author Felix
      * @date 2020-06-25 11:15
      * @describe 根据boolean值输出给定语句
-     * @return
-     * @throws
+     * @return void
     */
     public static void showIsOk(boolean b, String ok, String no) {
         if (b) {
@@ -53,8 +49,7 @@ public class MyUtil {
      * @author Felix
      * @date 2020-06-25 11:20
      * @describe 展示对应list结果
-     * @return
-     * @throws
+     * @return void
     */
     public static <T> void showInfo(ArrayList<T> al, String msg)  {
         if (al.size() == 0) {
@@ -73,14 +68,13 @@ public class MyUtil {
      * @author Felix
      * @date 2020-06-26 14:11
      * @describe  失败的尝试
-     * @return
-     * @throws
+     * @return void
     */
     public static <T> void showField(Class<T> clazz) {
         Field[] fields = clazz.getDeclaredFields();
-        for (int i = 0; i < fields.length; i++) {
-            fields[i].setAccessible(true);
-            System.out.print(fields[i].getName()+"\t");
+        for (Field field : fields) {
+            field.setAccessible(true);
+            System.out.print(field.getName() + "\t");
         }
     }
     /**
@@ -88,7 +82,6 @@ public class MyUtil {
      * @date 2020-06-26 14:34
      * @describe 录入单一字段的多条数据
      * @return String
-     * @throws
     */
     public static String scanInfo(String field) {
         System.out.println(field+"数量:");
@@ -106,16 +99,13 @@ public class MyUtil {
      * @author Felix
      * @date 2020-06-27 00:30
      * @describe 刷新缓存区
-     * @return
-     * @throws
+     * @return void
     */
     public static void flush() {
         scanner.nextLine();
     }
 
     /**
-     * @return
-     * @throws
      * @author Felix
      * @date 2020-07-02 10:21
      * @describe 获取验证码并返回是否输入正确的结果

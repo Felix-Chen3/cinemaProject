@@ -16,14 +16,14 @@ import java.sql.Statement;
 import java.util.Properties;
 
 public class JDBCUtils {
-    @Test
+
     /**
      * @author Felix
-     * @date 2020-06-24 01:38
-     * @params * @param
+     * @date 2020/7/6 22:01
+     * @describe 返回一个与数据库的连接
      * @return java.sql.Connection
-     * @throws *IOException, ClassNotFoundException, SQLException
-     */
+    */
+    @Test
     public static Connection getConnection() throws IOException, ClassNotFoundException, SQLException {
         InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream("jdbc.properties");
         Properties pros = new Properties();

@@ -8,8 +8,6 @@ package felix.biz.imp0;
 import felix.biz.HallBiz;
 import felix.dao.Imp0.HallDapImp0;
 import felix.entity.Hall;
-import felix.entity.Movie;
-
 import java.util.ArrayList;
 
 public class HallBizImp0 implements HallBiz {
